@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+		<script src="https://code.highcharts.com/modules/data.js"></script>
+		<script src="https://code.highcharts.com/modules/accessibility.js"></script>
+    <style>
+      h1 {
+        color: #efefef;
+        text-align: center;
+      }
+
+      .menu {
+        text-align: right;
+        color: #ffffff;
+        text-decoration: none;
+        display: flex;
+        float: right;
+      }
+
+      .menu-entry {
+        color: #11ff11;
+      }
+
+      .sep::before {
+        margin-left: 10px;
+        content: '|';
+        margin-right: 10px;
+      }
+    </style>
+    <title>status.2b2t.jp</title>
+  </head>
+  <body style="background: #0e0e0e;">
+    <h1 id="status">updating data...</h1>
+    <div class="menu">
+      <label class="menu-entry"><input type="checkbox" id="showPrev" onclick="updateDelayed()">Show previous values</input></label>
+      <span class="sep"></span>
+      <a class="menu-entry" href="#7d" onclick="updateDelayed()">7d</a>
+      <span class="sep"></span>
+      <a class="menu-entry" href="#24h" onclick="updateDelayed()">24h</a>
+      <span class="sep"></span>
+      <a class="menu-entry" href="#12h" onclick="updateDelayed()">12h</a>
+      <span class="sep"></span>
+      <a class="menu-entry" href="#6h" onclick="updateDelayed()">6h</a>
+      <span class="sep"></span>
+      <a class="menu-entry" href="#1h" onclick="updateDelayed()">1h</a>
+      <span style="margin-right: 20px;"></span>
+    </div>
+    <br />
+    <div id="container"></div>
+		<script src="/charts.js"></script>
+  </body>
+</html>
