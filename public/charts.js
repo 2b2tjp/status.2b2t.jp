@@ -7,7 +7,7 @@ const seriesAll = (data, max, realType) => [
   {
     type: 'spline',
     color: '#ff0000',
-    name: `TPS (${realType})`,
+    name: `TPS`,
     data: data.tps.slice(Math.max(data.tps.length - max, 0)),
   },
   {
@@ -19,7 +19,7 @@ const seriesAll = (data, max, realType) => [
   {
     type: 'spline',
     color: '#00ff00',
-    name: `Players Online (${realType})`,
+    name: `Players Online`,
     data: data.players.slice(Math.max(data.players.length - max, 0)),
   },
   {
@@ -31,7 +31,7 @@ const seriesAll = (data, max, realType) => [
   {
     type: 'spline',
     color: '#ffff00',
-    name: `Chats per minute (${realType})`,
+    name: `Chats per minute`,
     data: data.cpm.slice(Math.max(data.cpm.length - max, 0)),
   },
   {
@@ -45,19 +45,19 @@ const seriesNoPrev = (data, max, realType) => [
   {
     type: 'spline',
     color: '#ff0000',
-    name: `TPS (${realType})`,
+    name: `TPS`,
     data: data.tps.slice(Math.max(data.tps.length - max, 0)),
   },
   {
     type: 'spline',
     color: '#00ff00',
-    name: `Players Online (${realType})`,
+    name: `Players Online`,
     data: data.players.slice(Math.max(data.players.length - max, 0)),
   },
   {
     type: 'spline',
     color: '#ffff00',
-    name: `Chats per minute (${realType})`,
+    name: `Chats per minute`,
     data: data.cpm.slice(Math.max(data.cpm.length - max, 0)),
   },
 ]
