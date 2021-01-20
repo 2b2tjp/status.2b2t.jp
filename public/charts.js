@@ -103,7 +103,12 @@ const update = async () => {
   } else {
     selectedSeries = seriesNoPrev(data, max, realType)
   }
-  status.textContent = `tps is ${data.tps[data.tps.length-1][1]} and ${data.players[data.players.length-1][1]} players online (showing last ${realType} entries [${max}])`
+  const seemsDown = data.tps[data.tps.length-1][0] < (Date.now() - 180000)
+  if (seemsDown) {
+    status.textContent = `the server seems down. (last received tps: ${data.tps[data.tps.length-1][1]} and ${data.players[data.players.length-1][1]} players online)`
+  } else {
+    status.textContent = `tps is ${data.tps[data.tps.length-1][1]} and ${data.players[data.players.length-1][1]} players online (showing last ${realType} entries [${max}])`
+  }
   Highcharts.chart('container', {
     chart: {
       zoomType: 'x',
