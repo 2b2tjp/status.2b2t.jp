@@ -1,5 +1,6 @@
 const status = document.getElementById('status')
 const showPrev = document.getElementById('showPrev')
+const showCpm = document.getElementById('showCpm')
 const updateDelayed = () => {
   setTimeout(() => update(), 10)
 }
@@ -27,20 +28,20 @@ const seriesAll = (data, max, realType) => [
     color: 'rgba(32, 170, 32, 0.4)',
     name: `Players Online (previous ${realType})`,
     data: data.players.length < (max * 2) ? [] : data.players.slice(-(max*2)).slice(0, max).map(arr => [arr[0] + (max * 60 * 1000), arr[1]]),
-  },
-  {
-    type: 'spline',
-    color: '#ffff00',
-    name: `Chats per minute`,
-    data: data.cpm.slice(Math.max(data.cpm.length - max, 0)),
-  },
-  {
-    type: 'spline',
-    color: 'rgba(170, 170, 32, 0.4)',
-    name: `Chats per minute (previous ${realType})`,
-    data: data.cpm.length < (max * 2) ? [] : data.cpm.slice(-(max*2)).slice(0, max).map(arr => [arr[0] + (max * 60 * 1000), arr[1]]),
-  },
+  }
 ]
+const cpmSeries = (data, max, realType) => [{
+  type: 'spline',
+  color: '#ffff00',
+  name: `Chats per minute`,
+  data: data.cpm.slice(Math.max(data.cpm.length - max, 0)),
+}]
+const cpmPrevSeries = (data, max, realType) => [{
+  type: 'spline',
+  color: 'rgba(170, 170, 32, 0.4)',
+  name: `Chats per minute (previous ${realType})`,
+  data: data.cpm.length < (max * 2) ? [] : data.cpm.slice(-(max*2)).slice(0, max).map(arr => [arr[0] + (max * 60 * 1000), arr[1]]),
+}]
 const seriesNoPrev = (data, max, realType) => [
   {
     type: 'spline',
@@ -53,13 +54,7 @@ const seriesNoPrev = (data, max, realType) => [
     color: '#00ff00',
     name: `Players Online`,
     data: data.players.slice(Math.max(data.players.length - max, 0)),
-  },
-  {
-    type: 'spline',
-    color: '#ffff00',
-    name: `Chats per minute`,
-    data: data.cpm.slice(Math.max(data.cpm.length - max, 0)),
-  },
+  }
 ]
 const update = async () => {
   status.textContent = 'updating data...'
@@ -98,10 +93,16 @@ const update = async () => {
   const origin = location.origin
   const data = await fetch(`${origin}/api/data.json`).then(res => res.json())
   let selectedSeries = null
-  if (showPrev.checked) {
+  if (showPrev.checked) { // show previous thing
     selectedSeries = seriesAll(data, max, realType)
-  } else {
+    if (showCpm.checked) {
+      selectedSeries = selectedSeries.concat(cpmSeries(data, max, realType), cpmPrevSeries(data, max, realType))
+    }
+  } else { // do not show previous thing
     selectedSeries = seriesNoPrev(data, max, realType)
+    if (showCpm.checked) {
+      selectedSeries = selectedSeries.concat(cpmSeries(data, max, realType))
+    }
   }
   const seemsDown = data.tps[data.tps.length-1][0] < (Date.now() - 180000)
   if (seemsDown) {
@@ -145,7 +146,7 @@ const update = async () => {
       }
     },
 
-    series: selectedSeries,
+    series: selectedSeries.concat(),
     time: { useUTC: false },
   });
 }
