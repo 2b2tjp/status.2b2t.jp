@@ -65,6 +65,9 @@ const update = async () => {
   if (type === 'all' || type === '7d') {
     max = 10080
     realType = '7d'
+  } else if (type === '2d' || type === '48h') {
+    max = 2880
+    realType = '2d'
   } else if (type === '1d' || type === '24h') {
     max = 1440
     realType = '24h'
