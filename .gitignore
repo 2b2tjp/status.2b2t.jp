@@ -2,3 +2,4 @@ logs/
 **/node_modules/**
 data.json
 .env
+payments.json
