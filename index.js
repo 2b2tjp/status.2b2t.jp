@@ -40,7 +40,9 @@ app.post('/api/payments.json', (req, res) => {
   if (req.headers['x-bc-sig'] !== crypto.createHash('sha256').update(env.TEBEX_SECRET + json['payment']['txn_id'] + json['payment']['status'] + json['customer']['email']).digest('hex')) {
     return res.status(403).send({ error: 'You don\'t have permission to do this.' })
   }
+  logger.info('Accepted payment: ' + JSON.stringify(json, null, 2))
   // remove sensitive data
+  delete json['payment']['txn_id']
   delete json['customer']['address']
   delete json['customer']['name']
   delete json['customer']['ip']
@@ -48,7 +50,6 @@ app.post('/api/payments.json', (req, res) => {
   delete json['customer']['country']
   delete json['coupons']
   payments.push(json)
-  logger.info('Accepted payment: ' + JSON.stringify(json, null, 2))
   res.send({ status: 'ok' })
   save()
 })
