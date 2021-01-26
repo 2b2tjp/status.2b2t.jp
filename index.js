@@ -34,6 +34,13 @@ app.post('/api/payments.json', (req, res) => {
   if (!json.payment || !json.customer) {
     return res.status(400).send({ error: 'invalid json' })
   }
+  // remove sensitive data
+  delete json['customer']['address']
+  delete json['customer']['name']
+  delete json['customer']['ip']
+  delete json['customer']['email']
+  delete json['customer']['country']
+  delete json['coupons']
   if (json.payment.status !== 'complete') {
     res.status(400).send({ error: 'cannot accept non-completed payments' })
   }
