@@ -23,7 +23,9 @@ app.get('/api/payments.json', (req, res) => {
   const since = req.query.since
   let filtered = payments
   if (uuid)  filtered = filtered.filter(payment => payment.customer.uuid === uuid.replace(/-/g, ''))
-  if (since && Number.isSafeInteger(since)) filtered = filtered.filter(payment => payment.payment.timestamp >= parseInt(since, 10))
+  try {
+    if (since) filtered = filtered.filter(payment => payment.payment.timestamp >= parseInt(since, 10))
+  } catch (e) {}
   res.send(JSON.stringify(filtered, null, 2))
 })
 
