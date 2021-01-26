@@ -29,6 +29,12 @@ app.get('/api/payments.json', (req, res) => {
 
 app.post('/api/payments.json', (req, res) => {
   const json = req.body
+  if (!json.payment || !json.customer) {
+    return res.status(400).send({ error: 'invalid json' })
+  }
+  if (json.payment.status !== 'complete') {
+    res.status(400).send({ error: 'cannot accept non-completed payments' })
+  }
   console.log('Signature: ' + req.headers['x-bc-sig'])
   if (req.headers['x-bc-sig'] !== crypto.createHash('sha256').update(env.TEBEX_SECRET + json['payment']['txn_id'] + json['payment']['status'] + json['customer']['email']).digest('hex')) {
     return res.status(403).send({ error: 'You don\'t have permission to do this.' })
