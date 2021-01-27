@@ -62,10 +62,7 @@ const update = async () => {
   const typeArr = location.href.split('#')
   const type = typeArr.length < 2 ? '24h' : typeArr[1]
   let realType = null
-  if (type === 'all' || type === '7d') {
-    max = 10080
-    realType = '7d'
-  } else if (type === '2d' || type === '48h') {
+  if (type === 'all' || type === '2d' || type === '48h') {
     max = 2880
     realType = '2d'
   } else if (type === '1d' || type === '24h') {
