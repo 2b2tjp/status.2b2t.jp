@@ -68,9 +68,9 @@ app.post('/api/data.json', (req, res) => {
   const players = req.body.players
   const cpm = req.body.cpm
   if (typeof tps !== 'number' || typeof players !== 'number' || typeof cpm !== 'number') return res.status(400).send({ error: 'invalid json' })
-  if (data.tps.length > 5760) data.tps = data.tps.splice(-5759)
-  if (data.players.length > 5760) data.players = data.players.splice(-5759)
-  if (data.cpm.length > 5760) data.cps = data.cps.splice(-5759)
+  if (data.tps.length > 5760) data.tps.splice(-5759)
+  if (data.players.length > 5760) data.players.splice(-5759)
+  if (data.cpm.length > 5760) data.cps.splice(-5759)
   const time = Date.now()
   data.tps.push([ time, Math.round(tps * 100) / 100 ])
   data.players.push([ time, players ])
