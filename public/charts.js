@@ -28,7 +28,25 @@ const seriesAll = (data, max, realType) => [
     color: 'rgba(32, 170, 32, 0.4)',
     name: `Players Online (previous ${realType})`,
     data: data.players.length < (max * 2) ? [] : data.players.slice(-(max*2)).slice(0, max).map(arr => [arr[0] + (max * 60 * 1000), arr[1]]),
-  }
+  },
+  {
+    type: 'spline',
+    color: '#70d49e',
+    name: `Players in queue`,
+    data: data.playersInQueue.slice(Math.max(data.playersInQueue.length - max, 0)),
+  },
+  {
+    type: 'spline',
+    color: 'rgba(42, 142, 88, 0.4)',
+    name: `Players in queue (previous ${realType})`,
+    data: data.playersInQueue.length < (max * 2) ? [] : data.playersInQueue.slice(-(max*2)).slice(0, max).map(arr => [arr[0] + (max * 60 * 1000), arr[1]]),
+  },
+  {
+    type: 'spline',
+    color: '#a6f0ff',
+    name: `Total players`,
+    data: data.playersInQueue.map((value, index) => [ value[0], data.players[index] + value[1] ]).slice(Math.max(data.playersInQueue.length - max, 0)),
+  },
 ]
 const cpmSeries = (data, max, realType) => [{
   type: 'spline',
@@ -52,9 +70,21 @@ const seriesNoPrev = (data, max, realType) => [
   {
     type: 'spline',
     color: '#00ff00',
-    name: `Players Online`,
+    name: `Online players in server`,
     data: data.players.slice(Math.max(data.players.length - max, 0)),
-  }
+  },
+  {
+    type: 'spline',
+    color: '#70d49e',
+    name: `Players in queue`,
+    data: data.playersInQueue.slice(Math.max(data.playersInQueue.length - max, 0)),
+  },
+  {
+    type: 'spline',
+    color: '#a6f0ff',
+    name: `Total players`,
+    data: data.playersInQueue.map((value, index, arr) => [ value[0], value[1] + data.players[data.players.length - (arr.length - index)][1] ]).slice(Math.max(data.playersInQueue.length - max, 0)),
+  },
 ]
 const update = async () => {
   status.textContent = 'updating data...'

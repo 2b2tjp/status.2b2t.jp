@@ -8,7 +8,7 @@ const crypto = require('crypto')
 const _fs = require('fs')
 const fs = _fs.promises
 if (!_fs.existsSync('./data.json')) {
-  _fs.writeFileSync('./data.json', '{"tps":[],"players":[],"cpm":[]}')
+  _fs.writeFileSync('./data.json', '{"tps":[],"players":[],"cpm":[],"playersInQueue":[]}')
 }
 if (!_fs.existsSync('./payments.json')) {
   _fs.writeFileSync('./payments.json', '[]')
@@ -63,18 +63,26 @@ app.post('/api/data.json', (req, res) => {
     return res.status(403).send({ error: 'You don\'t have permission to do this.' })
   }
   if (!data.cpm) data.cpm = []
-  if (!data.chunkGens) data.chunkGens = []
-  const tps = req.body.tps
+  if (!data.playersInQueue) data.playersInQueue = []
+  const isQueue = req.query['queue']
   const players = req.body.players
-  const cpm = req.body.cpm
-  if (typeof tps !== 'number' || typeof players !== 'number' || typeof cpm !== 'number') return res.status(400).send({ error: 'invalid json' })
-  if (data.tps.length > 5760) data.tps.shift()
-  if (data.players.length > 5760) data.players.shift()
-  if (data.cpm.length > 5760) data.cps.shift()
-  const time = Date.now()
-  data.tps.push([ time, Math.round(tps * 100) / 100 ])
-  data.players.push([ time, players ])
-  data.cpm.push([ time, cpm ])
+  if (typeof players !== 'number') return res.status(400).send({ error: 'invalid json' })
+  if (isQueue) {
+    if (data.playersInQueue.length > 5760) data.playersInQueue.shift()
+    const time = Date.now()
+    data.playersInQueue.push([ time, players ])
+  } else {
+    const tps = req.body.tps
+    const cpm = req.body.cpm
+    if (typeof tps !== 'number' || typeof cpm !== 'number') return res.status(400).send({ error: 'invalid json' })
+    if (data.tps.length > 5760) data.tps.shift()
+    if (data.players.length > 5760) data.players.shift()
+    if (data.cpm.length > 5760) data.cps.shift()
+    const time = Date.now()
+    data.tps.push([ time, Math.round(tps * 100) / 100 ])
+    data.players.push([ time, players ])
+    data.cpm.push([ time, cpm ])
+  }
   res.send({ status: 'ok' })
   save()
 })
