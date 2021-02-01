@@ -138,7 +138,7 @@ const update = async () => {
   if (seemsDown) {
     status.textContent = `the server seems down. (last received tps: ${data.tps[data.tps.length-1][1]} and ${data.players[data.players.length-1][1]} players online)`
   } else {
-    status.textContent = `tps is ${data.tps[data.tps.length-1][1]} and ${data.players[data.players.length-1][1]} players online (showing last ${realType} entries [${max}])`
+    status.textContent = `tps: ${data.tps[data.tps.length-1][1]}, players in queue: ${data.playersInQueue[data.playersInQueue.length-1][1]} (showing last ${realType} entries [${max}])`
   }
   Highcharts.chart('container', {
     chart: {
