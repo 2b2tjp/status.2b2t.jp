@@ -83,7 +83,7 @@ const seriesNoPrev = (data, max, realType) => [
     type: 'spline',
     color: '#a6f0ff',
     name: `Total players`,
-    data: data.playersInQueue.map((value, index, arr) => [ value[0], value[1] + data.players[data.players.length - (arr.length - index)][1] ]).slice(Math.max(data.playersInQueue.length - max, 0)),
+    data: data.playersInQueue.map((value, index, arr) => [ value[0], value[1] + (data.players[data.players.length - (arr.length - index)] || [0, 0])[1] ]).slice(Math.max(data.playersInQueue.length - max, 0)),
   },
 ]
 const update = async () => {
