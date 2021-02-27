@@ -45,7 +45,7 @@ const seriesAll = (data, realType, now, time) => [
     type: 'spline',
     color: '#a6f0ff',
     name: `Total players`,
-    data: data.playersInQueue.filter(arr => arr[0] >= now - time).map((value, index) => [ value[0], (data.players[index] || 0) + value[1] ]),
+    data: data.playersInQueue.filter(arr => arr[0] >= now - time).map((value, index) => [ value[0], (data.players[index] || [0, 0])[1] + value[1] ]),
   },
 ]
 const cpmSeries = (data, realType, now, time) => [{
