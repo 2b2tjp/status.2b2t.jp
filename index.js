@@ -91,8 +91,8 @@ app.post('/api/data.json', (req, res) => {
     res.status(500).send({ error: 'an internal error occurred' })
   }
 })
-app.listen(3030)
-logger.info('Listening on port 3030')
+app.listen(env.PORT)
+logger.info('Listening on port ' + env.PORT)
 
 const save = () =>
   Promise.all([fs.writeFile('./data.json', JSON.stringify(data)), fs.writeFile('./payments.json', JSON.stringify(payments))])
