@@ -4,86 +4,86 @@ const showCpm = document.getElementById('showCpm')
 const updateDelayed = () => {
   setTimeout(() => update(), 10)
 }
-const seriesAll = (data, max, realType) => [
+const seriesAll = (data, realType, now, time) => [
   {
     type: 'spline',
     color: '#ff0000',
     name: `TPS`,
-    data: data.tps.slice(Math.max(data.tps.length - max, 0)),
+    data: data.tps.filter(arr => arr[0] >= now - time),
   },
   {
     type: 'spline',
     color: 'rgba(170, 32, 32, 0.4)',
     name: `TPS (previous ${realType})`,
-    data: data.tps.length < (max * 2) ? [] : data.tps.slice(-(max*2)).slice(0, max).map(arr => [arr[0] + (max * 60 * 1000), arr[1]]),
+    data: data.tps.filter(arr => arr[0] >= now - (time * 2) && arr[0] < now - time).map(arr => [arr[0] + time, arr[1]]),
   },
   {
     type: 'spline',
     color: '#00ff00',
     name: `Players Online`,
-    data: data.players.slice(Math.max(data.players.length - max, 0)),
+    data: data.players.filter(arr => arr[0] >= now - time),
   },
   {
     type: 'spline',
     color: 'rgba(32, 170, 32, 0.4)',
     name: `Players Online (previous ${realType})`,
-    data: data.players.length < (max * 2) ? [] : data.players.slice(-(max*2)).slice(0, max).map(arr => [arr[0] + (max * 60 * 1000), arr[1]]),
+    data: data.players.filter(arr => arr[0] >= now - (time * 2) && arr[0] < now - time).map(arr => [arr[0] + time, arr[1]]),
   },
   {
     type: 'spline',
     color: '#70d49e',
     name: `Players in queue`,
-    data: data.playersInQueue.slice(Math.max(data.playersInQueue.length - max, 0)),
+    data: data.playersInQueue.filter(arr => arr[0] >= now - time),
   },
   {
     type: 'spline',
     color: 'rgba(42, 142, 88, 0.4)',
     name: `Players in queue (previous ${realType})`,
-    data: data.playersInQueue.length < (max * 2) ? [] : data.playersInQueue.slice(-(max*2)).slice(0, max).map(arr => [arr[0] + (max * 60 * 1000), arr[1]]),
+    data: data.playersInQueue.filter(arr => arr[0] >= now - (time * 2) && arr[0] < now - time).map(arr => [arr[0] + time, arr[1]]),
   },
   {
     type: 'spline',
     color: '#a6f0ff',
     name: `Total players`,
-    data: data.playersInQueue.map((value, index) => [ value[0], data.players[index] + value[1] ]).slice(Math.max(data.playersInQueue.length - max, 0)),
+    data: data.playersInQueue.filter(arr => arr[0] >= now - time).map((value, index) => [ value[0], (data.players[index] || 0) + value[1] ]),
   },
 ]
-const cpmSeries = (data, max, realType) => [{
+const cpmSeries = (data, realType, now, time) => [{
   type: 'spline',
   color: '#ffff00',
   name: `Chats per minute`,
-  data: data.cpm.slice(Math.max(data.cpm.length - max, 0)),
+  data: data.cpm.filter(arr => arr[0] >= now - time),
 }]
-const cpmPrevSeries = (data, max, realType) => [{
+const cpmPrevSeries = (data, realType, now, time) => [{
   type: 'spline',
   color: 'rgba(170, 170, 32, 0.4)',
   name: `Chats per minute (previous ${realType})`,
-  data: data.cpm.length < (max * 2) ? [] : data.cpm.slice(-(max*2)).slice(0, max).map(arr => [arr[0] + (max * 60 * 1000), arr[1]]),
+  data: data.cpm.filter(arr => arr[0] >= now - (time * 2) && arr[0] < now - time).map(arr => [arr[0] + time, arr[1]]),
 }]
-const seriesNoPrev = (data, max, realType) => [
+const seriesNoPrev = (data, realType, now, time) => [
   {
     type: 'spline',
     color: '#ff0000',
     name: `TPS`,
-    data: data.tps.slice(Math.max(data.tps.length - max, 0)),
+    data: data.tps.filter(arr => arr[0] >= now - time),
   },
   {
     type: 'spline',
     color: '#00ff00',
     name: `Online players in server`,
-    data: data.players.slice(Math.max(data.players.length - max, 0)),
+    data: data.players.filter(arr => arr[0] >= now - time),
   },
   {
     type: 'spline',
     color: '#70d49e',
     name: `Players in queue`,
-    data: data.playersInQueue.slice(Math.max(data.playersInQueue.length - max, 0)),
+    data: data.playersInQueue.filter(arr => arr[0] >= now - time),
   },
   {
     type: 'spline',
     color: '#a6f0ff',
     name: `Total players`,
-    data: data.playersInQueue.map((value, index, arr) => [ value[0], value[1] + (data.players[data.players.length - (arr.length - index)] || [0, 0])[1] ]).slice(Math.max(data.playersInQueue.length - max, 0)),
+    data: data.playersInQueue.filter(arr => arr[0] >= now - time).map((value, index, arr) => [ value[0], value[1] + (data.players[data.players.length - (arr.length - index)] || [0, 0])[1] ]),
   },
 ]
 const update = async () => {
@@ -120,25 +120,28 @@ const update = async () => {
     max = 1440
     realType = '24h'
   }
+  const now = Date.now()
+  const time = max * 60 * 1000
   const origin = location.origin
   const data = await fetch(`${origin}/api/data.json`).then(res => res.json())
   let selectedSeries = null
   if (showPrev.checked) { // show previous thing
-    selectedSeries = seriesAll(data, max, realType)
+    selectedSeries = seriesAll(data, realType, now, time)
     if (showCpm.checked) {
-      selectedSeries = selectedSeries.concat(cpmSeries(data, max, realType), cpmPrevSeries(data, max, realType))
+      selectedSeries = selectedSeries.concat(cpmSeries(data, realType, now, time), cpmPrevSeries(data, realType, now, time))
     }
   } else { // do not show previous thing
-    selectedSeries = seriesNoPrev(data, max, realType)
+    selectedSeries = seriesNoPrev(data, realType, now, time)
     if (showCpm.checked) {
-      selectedSeries = selectedSeries.concat(cpmSeries(data, max, realType))
+      selectedSeries = selectedSeries.concat(cpmSeries(data, realType, now, time))
     }
   }
-  const seemsDown = data.tps[data.tps.length-1][0] < (Date.now() - 180000)
+  const last = (data.tps[data.tps.length-1] || [0, 0])
+  const seemsDown = last[0] < (Date.now() - 180000)
   if (seemsDown) {
-    status.textContent = `the server seems down. (last received tps: ${data.tps[data.tps.length-1][1]} and ${data.players[data.players.length-1][1]} players online)`
+    status.textContent = `the server seems down. (last received tps: ${last[1]} and ${last[1]} players online)`
   } else {
-    status.textContent = `tps: ${data.tps[data.tps.length-1][1]}, players in queue: ${data.playersInQueue[data.playersInQueue.length-1][1]} (showing last ${realType} entries [${max}])`
+    status.textContent = `tps: ${last[1]}, players in queue: ${data.playersInQueue[data.playersInQueue.length-1][1]} (showing last ${realType} entries)`
   }
   Highcharts.chart('container', {
     chart: {
