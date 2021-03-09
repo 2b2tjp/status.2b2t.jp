@@ -1,14 +1,11 @@
 const status = document.getElementById('status')
 const showPrev = document.getElementById('showPrev')
 const showCpm = document.getElementById('showCpm')
-const updateDelayed = () => {
-  setTimeout(() => update(), 10)
-}
 const seriesAll = (data, realType, now, time) => [
   {
     type: 'spline',
     color: '#ff0000',
-    name: `TPS`,
+    name: 'TPS',
     data: data.tps.filter(arr => arr[0] >= now - time),
   },
   {
@@ -20,7 +17,7 @@ const seriesAll = (data, realType, now, time) => [
   {
     type: 'spline',
     color: '#00ff00',
-    name: `Players Online`,
+    name: 'Players Online',
     data: data.players.filter(arr => arr[0] >= now - time),
   },
   {
@@ -32,7 +29,7 @@ const seriesAll = (data, realType, now, time) => [
   {
     type: 'spline',
     color: '#70d49e',
-    name: `Players in queue`,
+    name: 'Players in queue',
     data: data.playersInQueue.filter(arr => arr[0] >= now - time),
   },
   {
@@ -44,14 +41,14 @@ const seriesAll = (data, realType, now, time) => [
   {
     type: 'spline',
     color: '#a6f0ff',
-    name: `Total players`,
+    name: 'Total players',
     data: data.playersInQueue.filter(arr => arr[0] >= now - time).map((value, index) => [ value[0], (data.players[index] || [0, 0])[1] + value[1] ]),
   },
 ]
 const cpmSeries = (data, realType, now, time) => [{
   type: 'spline',
   color: '#ffff00',
-  name: `Chats per minute`,
+  name: 'Chats per minute',
   data: data.cpm.filter(arr => arr[0] >= now - time),
 }]
 const cpmPrevSeries = (data, realType, now, time) => [{
@@ -64,25 +61,25 @@ const seriesNoPrev = (data, realType, now, time) => [
   {
     type: 'spline',
     color: '#ff0000',
-    name: `TPS`,
+    name: 'TPS',
     data: data.tps.filter(arr => arr[0] >= now - time),
   },
   {
     type: 'spline',
     color: '#00ff00',
-    name: `Online players in server`,
+    name: 'Online players in server',
     data: data.players.filter(arr => arr[0] >= now - time),
   },
   {
     type: 'spline',
     color: '#70d49e',
-    name: `Players in queue`,
+    name: 'Players in queue',
     data: data.playersInQueue.filter(arr => arr[0] >= now - time),
   },
   {
     type: 'spline',
     color: '#a6f0ff',
-    name: `Total players`,
+    name: 'Total players',
     data: data.playersInQueue.filter(arr => arr[0] >= now - time).map((value, index, arr) => [ value[0], value[1] + (data.players[data.players.length - (arr.length - index)] || [0, 0])[1] ]),
   },
 ]
@@ -143,6 +140,7 @@ const update = async () => {
   } else {
     status.textContent = `tps: ${last[1]}, players in queue: ${data.playersInQueue[data.playersInQueue.length-1][1]} (showing last ${realType} entries)`
   }
+  // eslint-disable-next-line no-undef
   Highcharts.chart('container', {
     chart: {
       zoomType: 'x',
@@ -155,34 +153,39 @@ const update = async () => {
       text: '',
     },
     xAxis: {
-      type: 'datetime'
+      type: 'datetime',
     },
     yAxis: {
       title: {
-        text: ''
-      }
+        text: '',
+      },
     },
     legend: {
-      enabled: false
+      enabled: false,
     },
     plotOptions: {
       spline: {
         marker: {
-          radius: 0
+          radius: 0,
         },
         lineWidth: 2,
         states: {
           hover: {
-            lineWidth: 3
-          }
+            lineWidth: 3,
+          },
         },
-      }
+      },
     },
 
     series: selectedSeries.concat(),
     time: { useUTC: false },
-  });
+  })
+}
+// used in index.html
+// eslint-disable-next-line no-unused-vars
+const updateDelayed = () => {
+  setTimeout(() => update(), 10)
 }
 
 update()
-setInterval(() => update(), 60000);
+setInterval(() => update(), 60000)

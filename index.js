@@ -18,6 +18,10 @@ const payments = JSON.parse(_fs.readFileSync('./payments.json'))
 app.use(express.static('public'))
 app.use(express.json({ limit: '10kb' }))
 
+const save = () =>
+  Promise.all([fs.writeFile('./data.json', JSON.stringify(data)), fs.writeFile('./payments.json', JSON.stringify(payments))])
+    .then(() => { logger.info('Written data to file') })
+
 app.get('/api/payments.json', (req, res) => {
   const uuid = req.query.uuid
   const since = req.query.since
@@ -25,7 +29,7 @@ app.get('/api/payments.json', (req, res) => {
   if (uuid)  filtered = filtered.filter(payment => payment.customer.uuid === uuid.replace(/-/g, ''))
   try {
     if (since) filtered = filtered.filter(payment => payment.payment.timestamp >= parseInt(since, 10))
-  } catch (e) {}
+  } catch (e) {} // eslint-disable-line no-empty
   res.send(JSON.stringify(filtered, null, 2))
 })
 
@@ -93,10 +97,6 @@ app.post('/api/data.json', (req, res) => {
 })
 app.listen(env.PORT)
 logger.info('Listening on port ' + env.PORT)
-
-const save = () =>
-  Promise.all([fs.writeFile('./data.json', JSON.stringify(data)), fs.writeFile('./payments.json', JSON.stringify(payments))])
-    .then(() => { logger.info('Written data to file') })
 
 // add exit handler
 let exit = false
