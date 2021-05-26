@@ -7,6 +7,7 @@ const seriesAll = (data, realType, now, time) => [
     color: '#ff0000',
     name: 'TPS',
     data: data.tps.filter(arr => arr[0] >= now - time),
+    yAxis: 1,
   },
   {
     type: 'spline',
@@ -42,7 +43,7 @@ const seriesAll = (data, realType, now, time) => [
     type: 'spline',
     color: '#a6f0ff',
     name: 'Total players',
-    data: data.playersInQueue.filter(arr => arr[0] >= now - time).map((value, index) => [ value[0], (data.players[index] || [0, 0])[1] + value[1] ]),
+    data: data.playersInQueue.filter(arr => arr[0] >= now - time).map((value, index) => [value[0], (data.players[index] || [0, 0])[1] + value[1]]),
   },
 ]
 const cpmSeries = (data, realType, now, time) => [{
@@ -63,6 +64,7 @@ const seriesNoPrev = (data, realType, now, time) => [
     color: '#ff0000',
     name: 'TPS',
     data: data.tps.filter(arr => arr[0] >= now - time),
+    yAxis: 1,
   },
   {
     type: 'spline',
@@ -80,7 +82,7 @@ const seriesNoPrev = (data, realType, now, time) => [
     type: 'spline',
     color: '#a6f0ff',
     name: 'Total players',
-    data: data.playersInQueue.filter(arr => arr[0] >= now - time).map((value, index, arr) => [ value[0], value[1] + (data.players[data.players.length - (arr.length - index)] || [0, 0])[1] ]),
+    data: data.playersInQueue.filter(arr => arr[0] >= now - time).map((value, index, arr) => [value[0], value[1] + (data.players[data.players.length - (arr.length - index)] || [0, 0])[1]]),
   },
 ]
 const update = async () => {
@@ -133,12 +135,12 @@ const update = async () => {
       selectedSeries = selectedSeries.concat(cpmSeries(data, realType, now, time))
     }
   }
-  const last = (data.tps[data.tps.length-1] || [0, 0])
+  const last = (data.tps[data.tps.length - 1] || [0, 0])
   const seemsDown = last[0] < (Date.now() - 180000)
   if (seemsDown) {
     status.textContent = `the server seems down. (last received tps: ${last[1]} and ${last[1]} players online)`
   } else {
-    status.textContent = `tps: ${last[1]}, players in queue: ${data.playersInQueue[data.playersInQueue.length-1][1]} (showing last ${realType} entries)`
+    status.textContent = `tps: ${last[1]}, players in queue: ${data.playersInQueue[data.playersInQueue.length - 1][1]} (showing last ${realType} entries)`
   }
   // eslint-disable-next-line no-undef
   Highcharts.chart('container', {
@@ -155,11 +157,16 @@ const update = async () => {
     xAxis: {
       type: 'datetime',
     },
-    yAxis: {
+    yAxis: [{
       title: {
-        text: '',
+        text: 'Players',
       },
-    },
+    }, {
+      title: {
+        text: 'Ticks Per Second',
+      },
+      opposite: true,
+    }],
     legend: {
       enabled: false,
     },
@@ -178,7 +185,7 @@ const update = async () => {
     },
 
     series: selectedSeries.concat(),
-    time: { useUTC: false },
+    time: {useUTC: false},
   })
 }
 // used in index.html
