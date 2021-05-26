@@ -1,63 +1,65 @@
 <!DOCTYPE html>
 <html>
-  <head>
+<head>
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <script src="https://code.highcharts.com/highcharts.js"></script>
-		<script src="https://code.highcharts.com/modules/data.js"></script>
-		<script src="https://code.highcharts.com/modules/accessibility.js"></script>
+    <script src="https://code.highcharts.com/modules/data.js"></script>
+    <script src="https://code.highcharts.com/modules/accessibility.js"></script>
     <style>
-      h1 {
-        color: #efefef;
-        text-align: center;
-      }
+        h1 {
+            color: #efefef;
+            text-align: center;
+        }
 
-      .menu {
-        text-align: right;
-        color: #ffffff;
-        text-decoration: none;
-        display: flex;
-        flex-wrap: wrap;
-        float: right;
-      }
+        .menu {
+            text-align: right;
+            color: #ffffff;
+            text-decoration: none;
+            display: flex;
+            flex-wrap: wrap;
+            float: right;
+        }
 
-      .menu-entry {
-        color: #11ff11;
-      }
+        .menu-entry {
+            color: #11ff11;
+        }
 
-      .sep::before {
-        margin-left: 10px;
-        content: '|';
-        margin-right: 10px;
-      }
+        .sep::before {
+            margin-left: 10px;
+            content: '|';
+            margin-right: 10px;
+        }
 
-      #container{
-        width: 100%;
-      }
+        #container {
+            width: 100%;
+        }
     </style>
     <title>status.2b2t.jp</title>
-  </head>
-  <body style="background: #0e0e0e;">
-    <h1 id="status">updating data...</h1>
-    <div class="menu">
-      <label class="menu-entry"><input type="checkbox" id="showCpm" onclick="updateDelayed()" checked>Show cpm</input></label>
-      <span class="sep"></span>
-      <label class="menu-entry"><input type="checkbox" id="showPrev" onclick="updateDelayed()">Show previous values</input></label>
-      <span class="sep"></span>
-      <a class="menu-entry" href="#2d" onclick="updateDelayed()">2d</a>
-      <span class="sep"></span>
-      <a class="menu-entry" href="#24h" onclick="updateDelayed()">24h</a>
-      <span class="sep"></span>
-      <a class="menu-entry" href="#12h" onclick="updateDelayed()">12h</a>
-      <span class="sep"></span>
-      <a class="menu-entry" href="#6h" onclick="updateDelayed()">6h</a>
-      <span class="sep"></span>
-      <a class="menu-entry" href="#1h" onclick="updateDelayed()">1h</a>
-      <span class="sep"></span>
-      <a class="menu-entry" href="https://github.com/2b2tjp/status.2b2t.jp">source code</a>
-      <span style="margin-right: 20px;"></span>
-    </div>
-    <br />
-    <div id="container"></div>
-		<script src="/charts.js"></script>
-  </body>
+</head>
+<body style="background: #0e0e0e;">
+<h1 id="status">updating data...</h1>
+<div class="menu">
+    <label class="menu-entry"><input type="checkbox" id="showCpm" onclick="updateDelayed()" checked>Show cpm</input>
+    </label>
+    <span class="sep"></span>
+    <label class="menu-entry"><input type="checkbox" id="showPrev" onclick="updateDelayed()">Show previous
+        values</input></label>
+    <span class="sep"></span>
+    <a class="menu-entry" href="#2d" onclick="updateDelayed()">2d</a>
+    <span class="sep"></span>
+    <a class="menu-entry" href="#24h" onclick="updateDelayed()">24h</a>
+    <span class="sep"></span>
+    <a class="menu-entry" href="#12h" onclick="updateDelayed()">12h</a>
+    <span class="sep"></span>
+    <a class="menu-entry" href="#6h" onclick="updateDelayed()">6h</a>
+    <span class="sep"></span>
+    <a class="menu-entry" href="#1h" onclick="updateDelayed()">1h</a>
+    <span class="sep"></span>
+    <a class="menu-entry" href="https://github.com/2b2tjp/status.2b2t.jp">source code</a>
+    <span style="margin-right: 20px;"></span>
+</div>
+<br/>
+<div id="container"></div>
+<script src="/charts.js"></script>
+</body>
 </html>
