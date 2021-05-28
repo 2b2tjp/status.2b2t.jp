@@ -162,6 +162,8 @@ const update = async () => {
         text: 'Players',
       },
     }, {
+      floor: 0,
+      ceiling: 30,
       title: {
         text: 'Ticks Per Second',
       },
